@@ -11,7 +11,7 @@ rimg = rimg/255.0
 
 difference = rimg - np.array([1.0, 0.0, 0.0])
 distance = np.linalg.norm(difference, axis=2)
-threshold = distance < 0.6
+threshold = distance > 0.6
 
 pyplot.imshow(rimg[:,:,0] > threshold)
 
