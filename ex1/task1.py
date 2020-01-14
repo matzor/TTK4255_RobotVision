@@ -2,16 +2,37 @@ import matplotlib.pyplot as plt
 import numpy as np 
 
 box = np.loadtxt('box.txt')
-#box[:, 2] += box[:,2] + 5   #translates box 5m
 
 #rotation matrices
-tz = 5
-theta = 30
+def T_z(tz):
+    Tz = np.identity(4)
+    Tz[2, 3] = tz
+    return Tz
 
-Tz = np.identity(4)
-Tz[2, 3] = tz
-print(Tz)
+def R_x(theta):
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[1, 0, 0, 0],
+                    [0, c, -s, 0],
+                    [0, s, c, 0],
+                    [0, 0, 0, 1]])
 
+def R_y(theta):
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, 0, s, 0],
+                    [0, 1, 0, 0],
+                    [-s, 0, c, 0],
+                    [0, 0, 0, 1]])
+
+def R_z(theta):
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s, 0, 0],
+                    [s, c, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]])
+
+
+def point(x,y,z):
+    return np.array([[x], [y], [z], [1]])
 
 #Camera constants:
 f_x = 1000
@@ -30,8 +51,13 @@ PI = np.array([[1,0,0,0], [0,1,0,0], [0,0,1,0]])
 x = np.zeros([len(box), 3])
 x[:,2] = 1
 
+tz = 5
+theta = 30
+
+#Transforming points from world to camera
 for i in range(len(box)):
-    x[i,:] = K@PI@Tz@box[i,:]
+    x[i,:] = K@PI@T_z(tz)@box[i,:] #T_z(tz)@R_z(theta)@R_x(theta)@box[i,:]
+
 
 plt.figure()
 plt.scatter(x[:,0], x[:,1])
