@@ -106,11 +106,6 @@ plt.ylim([480,0])
 plt.title("Rotated box")
 
 #Plotting coordinate axis in box frame
-o_point = T_matrix@point(0,0,0)
-o_scaling = 1/o_point[2,:]
-#T = K@PI@T_matrix
-#T = o_scaling*T     #Translation matrix from world to box
 draw_frame(T_matrix)
-T=T_matrix
 
 plt.show() 

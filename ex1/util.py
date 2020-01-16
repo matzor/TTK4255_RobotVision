@@ -44,8 +44,7 @@ def draw_frame(T, KPI, length_of_axis):
     axis = np.array([[0,0,0,1], [1*l,0,0,1],[0,1*l,0,1],[0,0,1*l,1]])
     axis = T@axis.T
     scale_axis = 1/axis[2,:]
-    X = KPI@axis
-    X = scale_axis * X
+    X = KPI@axis * scale_axis
     origin = X[:,0]
     x = X[:,1]
     y = X[:,2]

@@ -41,6 +41,8 @@ KPI = K@PI
 #points given in platform coordinate frame, each corner of platform
 platform_corners = np.array([[0,0,0,1], [s2s,0,0,1], [s2s,s2s,0,1], [0,s2s,0,1]])
 
+
+### task2_b ###
 #loading image
 img = plt.imread("quanser.jpg")
 plt.imshow(img)
@@ -48,7 +50,6 @@ h, w = img.shape[0:2]
 plt.xlim([0,w])
 plt.ylim([h,0])
 
-### task2_b ###
 #transforming platform points to camera
 platform_camera = T_plat_to_cam@platform_corners.T
 scale_platform = 1/platform_camera[2,:]
