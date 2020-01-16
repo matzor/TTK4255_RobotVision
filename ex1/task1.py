@@ -54,19 +54,27 @@ def R_z(theta):
                     [0, 0, 0, 1]])
 
 def draw_line(a, b, **args):
-    plt.plot([a[0,0], b[0,0]], [a[1,0], b[1,0]], **args)
+    plt.plot([a[0], b[0]], [a[1], b[1]], **args)
 
 def draw_frame(T):
-    origin = T@point(0,0,0)
-    x = T@point(1,0,0)
-    y = T@point(0,1,0)
-    z = T@point(0,0,1)
+    origo = T@point(0,0,0)
+    scale_o = 1/origo[2,:]
+    origin = K@PI@origo
+    origin = scale_o * origin
+    axis = np.array([[1,0,0,1],[0,1,0,1],[0,0,1,1]])
+    axis = T@axis.T
+    scale_axis = 1/axis[2,:]
+    X = K@PI@axis
+    X = scale_axis * X
+    x = X[:,0]
+    y = X[:,1]
+    z = X[:,2]
     draw_line(origin, x, color='r')
-    plt.text(x[0,0],x[1,0], "X", color='r')
+    plt.text(x[0],x[1], "X", color='r')
     draw_line(origin, y, color='g')
-    plt.text(y[0,0],y[1,0], "Y", color='g')
+    plt.text(y[0],y[1], "Y", color='g')
     draw_line(origin, z, color='b')
-    plt.text(z[0,0],z[1,0], "Z", color='b')
+    plt.text(z[0],z[1], "Z", color='b')
 
 #Task 1b:
 box_camera = T_z(tz)@box.T
@@ -100,8 +108,9 @@ plt.title("Rotated box")
 #Plotting coordinate axis in box frame
 o_point = T_matrix@point(0,0,0)
 o_scaling = 1/o_point[2,:]
-T = K@PI@T_matrix
-T = o_scaling*T     #Translation matrix from world to box
-draw_frame(T)
+#T = K@PI@T_matrix
+#T = o_scaling*T     #Translation matrix from world to box
+draw_frame(T_matrix)
+T=T_matrix
 
 plt.show() 

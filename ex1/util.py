@@ -35,16 +35,21 @@ def R_z(theta):
                     [0, 0, 0, 1]])
 
 def draw_line(a, b, **args):
-    plt.plot([a[0,0], b[0,0]], [a[1,0], b[1,0]], **args)
+    plt.plot([a[0], b[0]], [a[1], b[1]], **args)
 
-def draw_frame(T):
-    origin = T@point(0,0,0)
-    x = T@point(1,0,0)
-    y = T@point(0,1,0)
-    z = T@point(0,0,1)
+def draw_frame(T, KPI):
+    axis = np.array([[0,0,0,1], [1,0,0,1],[0,1,0,1],[0,0,1,1]])
+    axis = T@axis.T
+    scale_axis = 1/axis[2,:]
+    X = KPI@axis
+    X = scale_axis * X
+    origin = X[:,0]
+    x = X[:,1]
+    y = X[:,2]
+    z = X[:,3]
     draw_line(origin, x, color='r')
-    plt.text(x[0,0],x[1,0], "X", color='r')
+    plt.text(x[0],x[1], "X", color='r')
     draw_line(origin, y, color='g')
-    plt.text(y[0,0],y[1,0], "Y", color='g')
+    plt.text(y[0],y[1], "Y", color='g')
     draw_line(origin, z, color='b')
-    plt.text(z[0,0],z[1,0], "Z", color='b')
+    plt.text(z[0],z[1], "Z", color='b')

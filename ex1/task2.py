@@ -31,14 +31,16 @@ platform_corners = np.array([[0,0,0,1], [s2s,0,0,1], [s2s,s2s,0,1], [0,s2s,0,1]]
 #loading image
 img = plt.imread("quanser.jpg")
 plt.imshow(img)
+h, w = img.shape[0:2]
 
 #transforming platform points to camera
+KPI = K@PI
 platform_camera = plat_to_cam@platform_corners.T
 scale_platform = 1/platform_camera[2,:]
-x_platform = scale_platform * (K@PI@platform_camera)
+x_platform = scale_platform * (KPI@platform_camera)
 plt.scatter(x_platform[0,:], x_platform[1,:])
 
-#platform_frame = scale_platform * (K@PI@plat_to_cam)
-#draw_frame(platform_frame)
-
+draw_frame(plat_to_cam, KPI)
+plt.xlim([0,w])
+plt.ylim([h,0])
 plt.show() 
