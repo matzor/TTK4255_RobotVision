@@ -6,7 +6,26 @@ def estimate_H(xy, XY):
     #
     # Task 2: Implement estimate_H
     #
-    H = np.eye(3) # Placeholder code
+    H_size = [3, 3]
+    A = np.empty([0, 9])
+    for row in range(XY.shape[0]):
+        X = XY[row, 0]
+        Y = XY[row, 1]
+        x = xy[row, 0]
+        y = xy[row, 1]
+
+        row1 = np.array([X, Y, 1, 0, 0, 0, -X*x, -Y*x, -x])
+        row2 = np.array([0, 0, 0, X, Y, 1, -X*y, -Y*y, -y])
+        
+        A = np.vstack([A, row1])
+        A = np.vstack([A, row2])
+
+    #Solve A@h = 0 by SVD
+    _, _, V = np.linalg.svd(A, full_matrices=True, compute_uv=True)
+    V = V.T
+    #Only want last column of V.T, which is the arg min
+    h = V[:, -1]
+    H = np.reshape(h, H_size)
     return H
 
 def decompose_H(H):
