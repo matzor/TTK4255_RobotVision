@@ -32,15 +32,31 @@ def decompose_H(H):
     #
     # Task 3a: Implement decompose_H
     #
-    T1 = np.eye(4) # Placeholder code
-    T2 = np.eye(4) # Placeholder code
+    t  = H[:, 2]
+    r1 = H[:, 0]
+    r2 = H[:, 1]
+    
+    scale = np.linalg.norm(r2)
+    r1 = (1/scale) * r1
+    r2 = (1/scale) * r2
+    t  = (1/scale) * t
+    r3 = np.cross(r1, r2)
+
+    T1 = np.column_stack((r1, r2, r3, t))
+    T1 = np.vstack([T1, [0, 0, 0, 1]])
+    T2 = -1*T1
     return T1, T2
 
 def choose_solution(T1, T2):
     #
     # Task 3b: Implement choose_solution
     #
-    return T1
+    #Check if z-translation is positive
+    if T1[2, 3] > 0: 
+        T = T1
+    else:
+        T = T2
+    return T
 
 K           = np.loadtxt('../data/cameraK.txt')
 all_markers = np.loadtxt('../data/markers.txt')
