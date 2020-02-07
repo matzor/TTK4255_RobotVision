@@ -3,6 +3,9 @@ import numpy as np
 K                  = np.loadtxt('../data/cameraK.txt')
 p_model            = np.loadtxt('../data/model.txt')
 platform_to_camera = np.loadtxt('../data/pose.txt')
+P = np.array(   [[1,0,0,0],
+                [0,1,0,0],
+                [0,0,1,0]])
 
 def residuals(uv, weights, yaw, pitch, roll):
 
@@ -20,12 +23,25 @@ def residuals(uv, weights, yaw, pitch, roll):
     # Task 1a: Implement the rest of this function
     #
 
-    # Tip: If A is an Nx2 array, np.linalg.norm(A, axis=1)
-    # computes the Euclidean length of each row of A and
-    # returns an Nx1 array.
+    uv_temp = np.empty([4, uv.shape[0]])
+    # First 3 markers are transformed to arm-frame, last 4 markers to rotor-frame
+    uv_temp[:, 0:3] = arm_to_camera @ p_model[0:3, :].T
+    uv_temp[:, 3:]  = rotors_to_camera @ p_model[3:, :].T
+    
+    # Multiply camera matrix, projection matrix
+    uv_hat = K @ P @ uv_temp
+    uv_hat = uv_hat.T
 
-    m = p_model.shape[0] # Placeholder
-    return np.ones(m)*np.inf # Placeholder
+    # Normalize 1/z
+    for row in range(uv_hat.shape[0]):
+        uv_hat[row, :] = uv_hat[row, :] / uv_hat[row, 2]
+   
+    point_diff = uv_hat[:, 0:2] - uv
+    # Find norm and remove not-detected points
+    res = np.multiply(np.linalg.norm(point_diff, axis=1), weights) 
+
+
+    return res
 
 def normal_equations(uv, weights, yaw, pitch):
     #
