@@ -43,12 +43,26 @@ def residuals(uv, weights, yaw, pitch, roll):
 
     return res
 
-def normal_equations(uv, weights, yaw, pitch):
+def normal_equations(uv, weights, yaw, pitch, roll):
     #
     # Task 1b: Compute the normal equation terms
     #
-    JTJ = np.eye(3)   # Placeholder
-    JTr = np.zeros(3) # Placeholder
+    
+    r = residuals(uv, weights, yaw, pitch, roll)
+    theta = [yaw, pitch, roll]
+    epsilon = 1e-7                      # "small change" in x
+    
+    J = np.empty([len(r), len(theta)])  # height of r, width of theta
+    
+    # Calculate gradient using finite difference method
+    for i in range(len(theta)):
+        _theta = theta
+        _theta[i] += epsilon            # adding "small change" to angle i
+        r_e = residuals(uv, weights, _theta[0], _theta[1], _theta[2])
+        J[:, i] = (r_e - r) / epsilon
+
+    JTJ = J.T @ J 
+    JTr = J.T @ r
     return JTJ, JTr
 
 def gauss_newton(uv, weights, yaw, pitch, roll):
@@ -57,9 +71,12 @@ def gauss_newton(uv, weights, yaw, pitch, roll):
     #
     max_iter = 100
     step_size = 0.25
+    theta = np.array([yaw, pitch, roll])
     for iter in range(max_iter):
-        pass # Placeholder
-    return yaw, pitch, roll
+        JTJ, JTr = normal_equations(uv, weights, theta[0], theta[1], theta[2])
+        delta = np.linalg.solve(JTJ, -JTr)
+        theta += step_size*delta
+    return theta[0], theta[1], theta[2]
 
 def levenberg_marquardt(uv, weights, yaw, pitch, roll):
     #

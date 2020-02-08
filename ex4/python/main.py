@@ -6,9 +6,9 @@ all_markers = np.loadtxt('../data/markers.txt')
 m = 7 # Number of markers (not all are detected in each frame)
 
 # Initial estimate
-yaw   = 11.6*np.pi/180;
-pitch = 28.9*np.pi/180;
-roll  = -0.6*np.pi/180;
+yaw   = 11.6*np.pi/180
+pitch = 28.9*np.pi/180
+roll  = -0.6*np.pi/180
 
 # Task 1
 method = gauss_newton
