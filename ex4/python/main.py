@@ -10,13 +10,18 @@ yaw   = 11.6*np.pi/180
 pitch = 28.9*np.pi/180
 roll  = -0.6*np.pi/180
 
+yaw   = 0*np.pi/180
+pitch = 0*np.pi/180
+roll  = -0*np.pi/180
+
 # Task 1
-method = gauss_newton
-last_image = 86
+#method = gauss_newton
+#last_image = 86
 
 # Task 2
-# method = levenberg_marquardt
-# last_image = 360
+method = levenberg_marquardt
+last_image = 360
+
 
 trajectory = []
 for image_number in range(last_image + 1):

@@ -82,7 +82,40 @@ def levenberg_marquardt(uv, weights, yaw, pitch, roll):
     #
     # Task 2a: Implement the Levenberg-Marquardt method
     #
-    return yaw, pitch, roll
+    max_iter = 100
+    step_size = 0.25
+    lam = 1e-3
+    precision = 1e-3
+    error = 0
+
+    theta = np.array([yaw, pitch, roll])
+    JTJ, JTr = normal_equations(uv, weights, theta[0], theta[1], theta[2])
+    D = np.eye(3) * np.average(np.diag(JTJ))
+    _theta = theta
+
+    #print("NEW IMAGE: ")
+    
+    for iter in range(max_iter):
+        JTJ, JTr = normal_equations(uv, weights, theta[0], theta[1], theta[2])
+        delta = np.linalg.solve((JTJ + lam * D), -JTr)
+        _theta = theta + step_size*delta
+        _error = np.linalg.norm(_theta - theta)
+        theta = _theta
+
+        # termination criteria
+        if _error < precision:
+            break
+        # Calculate new lambda
+        if _error < error:
+            lam = lam/10
+        else:
+            lam = lam*10
+        
+        error = _error
+        #print("Iteration %i Theta: %f, %f, %f, Lambda: %f" %(iter, theta[0], theta[1], theta[2], lam))
+        
+
+    return theta[0], theta[1], theta[2]
 
 def rotate_x(radians):
     c = np.cos(radians)
