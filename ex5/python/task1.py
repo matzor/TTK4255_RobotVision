@@ -17,7 +17,6 @@ I_rgb      = I_rgb/255.0
 I_gray     = rgb2gray(I_rgb)
 I_blur     = blur(I_gray, blur_sigma)
 Iu, Iv, Im = central_difference(I_blur)
-print(Im)
 u,v,theta  = extract_edges(Iu, Iv, Im, edge_threshold)
 
 fig, axes = plt.subplots(1,5,figsize=[15,4], sharey='row', sharex='row')
