@@ -21,7 +21,17 @@ def normalize_points(pts):
                     |1 |       |1|
     """
 
-    # todo: Compute pts_n and T
-    pts_n = pts
-    T = np.eye(3)
+    mean = np.mean(pts, axis=0)
+    std = np.mean(np.linalg.norm(pts - mean, axis=1))
+
+    T = np.array([
+        [np.sqrt(2)/std,    0,                  -np.sqrt(2)/std * mean[0]],
+        [0,                 np.sqrt(2)/std,     -np.sqrt(2)/std * mean[1]],
+        [0,                 0,                      1                   ]
+    ])
+
+    # Make pts a vector of homogenized coordinates (x, y, 1) by adding column of ones
+    pts_n = np.column_stack((pts, np.ones(len(pts)))).T
+    pts_n = T @ pts_n 
+    pts_n = (pts_n[:2,:] / pts_n[2,:]).T
     return pts_n, T
