@@ -12,6 +12,13 @@ def camera_matrices(K1, K2, R, t):
     """
 
     # todo: compute the correct P1 and P2
-    P1 = np.zeros((3,4))
-    P2 = np.zeros((3,4))
+    PI = np.zeros((3,4))
+    PI[:, :3] = np.eye(3)
+    P1 = K1 @ PI
+
+    PI2 = np.empty((3,4))
+    PI2[:, :3] = R[:,:]
+    PI2[:, 3]  = t[:]
+    P2 = K2 @ PI2
+
     return P1, P2

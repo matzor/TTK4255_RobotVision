@@ -15,5 +15,5 @@ def essential_from_fundamental(F, K1, K2):
     """
 
     # todo: Compute the correct E
-    E = np.zeros((3,3))
+    E = K2.T @ F @ K1
     return E
