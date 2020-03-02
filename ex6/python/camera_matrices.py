@@ -21,4 +21,7 @@ def camera_matrices(K1, K2, R, t):
     PI2[:, 3]  = t[:]
     P2 = K2 @ PI2
 
+    #print("P1 shape: ", P1.shape)
+    #print("P2 shape: ", P2.shape)
+
     return P1, P2
