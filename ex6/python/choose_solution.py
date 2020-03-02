@@ -20,6 +20,7 @@ def choose_solution(uv1, uv2, K1, K2, Rts):
                 pos_z += 1
         
         if pos_z > best:
+            best = pos_z
             soln = i
     print('Choosing solution %d' % soln)
     return Rts[soln]

@@ -25,11 +25,19 @@ def linear_triangulation(uv1, uv2, P1, P2):
     A[2, :] = uv2[0] * P2[2,:].T - P2[0,:].T
     A[3, :] = uv2[1] * P2[2,:].T - P2[1,:].T
 
+    #A = np.array([
+    #    [uv1[0] * P1[2,:].T - P1[0,:].T],
+    #    [uv1[1] * P1[2,:].T - P1[1,:].T],
+    #    [uv2[0] * P2[2,:].T - P2[0,:].T],
+    #    [uv2[1] * P2[2,:].T - P2[1,:].T]
+    #])
+
     #print("A", A)
 
     _, _, V = np.linalg.svd(A, full_matrices=True, compute_uv=True)
-    V = V.T 
-    X = V[:, -1]
-    X = X[:-1]
-    #X = X / X[3]
+    #V = V.T 
+    X = np.squeeze(V[-1,:])
+    #X = V[:, -1]
+    #X = X[:-1]
+    X = X / X[3]
     return X
